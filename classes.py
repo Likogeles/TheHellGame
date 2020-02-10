@@ -542,11 +542,11 @@ class BaseEnemy(Person):
             x = pygame.transform.scale(load_image("Enemys/Enemy_base_" + str(i) + ".png", -1), (50, 90))
             self.running_left.append(pygame.transform.flip(x, True, False))
         self.Exp_right = []
-        for i in range(6):
+        for i in range(8):
             self.Exp_right.append(
                 pygame.transform.scale(load_image("Enemys/Enemy_Exp_base_" + str(i) + ".png", -1), (50, 90)))
         self.Exp_left = []
-        for i in range(6):
+        for i in range(8):
             x = pygame.transform.scale(load_image("Enemys/Enemy_Exp_base_" + str(i) + ".png", -1), (50, 90))
             self.Exp_left.append(pygame.transform.flip(x, True, False))
 
@@ -564,13 +564,13 @@ class BaseEnemy(Person):
                     self.t = 0
         else:
             if self.oldrunningwasright:
-                if self.t > 5:
+                if self.t > 7:
                     self.kill()
                 else:
                     self.image = self.Exp_right[self.t]
                     self.t += 1
             else:
-                if self.t > 5:
+                if self.t > 7:
                     self.kill()
                 else:
                     self.image = self.Exp_left[self.t]
