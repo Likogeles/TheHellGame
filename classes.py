@@ -223,6 +223,48 @@ class DownHeroBullet(Bullet):
                 return "damagedown"
 
 
+class DubBullet(pygame.sprite.Sprite):
+    def __init__(self, x, y, move_on_right, *group):
+        super().__init__(*group)
+        self.right_images = [load_image("Bullets/bull_3_0.png", -1), load_image("Bullets/bull_3_1.png", -1)]
+        self.left_images = [pygame.transform.flip(load_image("Bullets/bull_3_0.png", -1), True, False),
+                            pygame.transform.flip(load_image("Bullets/bull_3_1.png", -1), True, False)]
+        if move_on_right:
+            self.image = self.right_images[0]
+        else:
+            self.image = self.left_images[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.t = 0
+
+    def fly(self, all_sprites, hero_sprites):
+        y = [i for i in hero_sprites][0]
+
+        self.t += 1
+        if self.t > 20:
+            self.t = 0
+        if y.oldrunningwasright:
+            if self.t == 0:
+                self.image = self.right_images[0]
+            elif self.t == 10:
+                self.image = self.right_images[1]
+        else:
+            if self.t == 0:
+                self.image = self.left_images[0]
+            elif self.t == 10:
+                self.image = self.left_images[1]
+
+        x = pygame.sprite.spritecollideany(self, all_sprites)
+        self.rect.y = y.rect.y
+        self.rect.x = y.rect.x - 35
+        if y.oldrunningwasright:
+            self.rect.x = y.rect.x + 50
+        if x:
+            if type(x) == BaseEnemy or type(x) == Box:
+                x.get_hit(10)
+
+
 class Person(pygame.sprite.Sprite):
     def __init__(self, x, y, imgname, *group):
         super().__init__(*group)
@@ -442,6 +484,12 @@ class Hero(Person):
                         else:
                             x -= 50
                         new_bullet = DownHeroBullet(x, self.rect.y + 10, 2, 2, self.oldrunningwasright)
+                    elif self.weapons_slide == 3:
+                        if self.oldrunningwasright:
+                            x += 50
+                        else:
+                            x -= 50
+                        return "DubBulletadd"
                 elif event.key == pygame.K_i:
                     self.weapons_slide = 0
                 elif event.key == pygame.K_o:
@@ -450,9 +498,17 @@ class Hero(Person):
                 elif event.key == pygame.K_k:
                     if check_saves_guns() >= 2:
                         self.weapons_slide = 2
+                elif event.key == pygame.K_l:
+                    if check_saves_guns() >= 3:
+                        self.weapons_slide = 3
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_d or event.key == pygame.K_a or event.key == pygame.K_j:
+                if event.key == pygame.K_d or event.key == pygame.K_a:
                     self.stopmove(event)
+                elif event.key == pygame.K_j:
+                    if self.weapons_slide == 3:
+                        return "DubBulletremove"
+                    else:
+                        self.stopmove(event)
 
             self.move(floor_sprites, all_sprites)
             if new_bullet:

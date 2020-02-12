@@ -4,7 +4,7 @@ import random
 
 from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window
 from classes import Floor, Endlevel, Box
-from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet
+from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet, DubBullet
 from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy
 from functions import load_image, saving_location, check_continue, check_plot
 from dialogues import dialog_with_AGT, dialog_with_ILD, dialog_with_PLN
@@ -94,6 +94,7 @@ class Level:
 
         self.enemy_sprites = pygame.sprite.Group()
         self.bullet_sprites = pygame.sprite.Group()
+        self.dub_bullet_sprites = pygame.sprite.Group()
 
         self.hp_sprites = pygame.sprite.Group()
         self.herobut_sprites = pygame.sprite.Group()
@@ -127,6 +128,8 @@ class Level:
         self.bullet_damage_sound.set_volume(0.15)
         self.bulletdown_damage_sound = pygame.mixer.Sound("data/Sounds/DownBulletDamage.ogg")
         self.bulletdown_damage_sound.set_volume(0.5)
+        self.dubbullet_sound = pygame.mixer.Sound("data/Sounds/The Living Tombstone - Spooky scary skeleton.ogg")
+        self.dubbullet_sound.set_volume(0.5)
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
@@ -175,6 +178,8 @@ class Level:
         elif self.hero.weapons_slide == 2:
             self.bullet_2_slider.draw(screen)
 
+        self.dub_bullet_sprites.draw(screen)
+
     def gravity(self):
         if not self.pause:
             self.hero.gravity(self.floor_sprites, self.all_sprites)
@@ -189,6 +194,8 @@ class Level:
                     self.bullet_damage_sound.play()
                 elif x == "damagedown":
                     self.bulletdown_damage_sound.play()
+            for i in self.dub_bullet_sprites:
+                x = i.fly(self.all_sprites, self.hero_sprites)
 
             for i in self.hp_sprites:
                 i.kill()
@@ -231,6 +238,7 @@ class Level:
                 if x == "continue":
                     self.pause = not self.pause
                 else:
+                    self.dubbullet_sound.stop()
                     return x
         else:
             x = self.hero.eventin(event, self.floor_sprites, self.all_sprites, self.npc_sprites)
@@ -241,7 +249,18 @@ class Level:
                         self.bullet_shoot_sound.play()
                     elif type(x) == DownHeroBullet:
                         self.down_bullet_shoot_sound.play()
+                elif x == "DubBulletadd":
+                    self.dubbullet_sound.play(-1)
+                    if self.hero.oldrunningwasright:
+                        self.dub_bullet_sprites.add(DubBullet(self.hero.rect.x + 50, self.hero.rect.y, self.hero.oldrunningwasright))
+                    else:
+                        self.dub_bullet_sprites.add(DubBullet(self.hero.rect.x - 35, self.hero.rect.y, self.hero.oldrunningwasright))
+                elif x == "DubBulletremove":
+                    self.dubbullet_sound.stop()
+                    for i in self.dub_bullet_sprites:
+                        i.kill()
                 elif x == "level_1" or x == "level_2" or x == "level_3" or x == "menu_":
+                    self.dubbullet_sound.stop()
                     return x
                 elif x[:12] == "dialogwindow":
                     self.hero.stop_all_move()
@@ -254,12 +273,14 @@ class Level:
                     elif x[12:] == "ПЛН0v105":
                         y = dialog_with_PLN(self, screen, x)
                     if y:
+                        self.dubbullet_sound.stop()
                         return y
 
     def hero_shoot(self):
         x = self.hero.shoot()
         if x:
-            self.bullet_sprites.add(x)
+            if type(x) == Bullet or type(x) == SinusBullet or type(x) == DownHeroBullet:
+                self.bullet_sprites.add(x)
 
     def click(self, pos):
         for i in self.but_sprites:
