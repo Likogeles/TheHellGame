@@ -1,1 +1,1 @@
-.\venv\Scripts\python.exe main.py
+.\python38\python.exe main.py

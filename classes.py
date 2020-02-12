@@ -125,8 +125,10 @@ class Bullet(pygame.sprite.Sprite):
             if type(x) == BaseEnemy or type(x) == Box:
                 x.get_hit(20)
                 self.kill()
+                return "damage"
             elif type(x) == Floor:
                 self.kill()
+                return "damage"
 
         x = pygame.sprite.spritecollideany(self, hero_sprites)
         if x:
@@ -155,8 +157,10 @@ class SinusBullet(Bullet):
             if type(x) == BaseEnemy or type(x) == Box:
                 x.get_hit(5)
                 self.kill()
+                return "damage"
             elif type(x) == Floor:
                 self.kill()
+                return "damage"
 
 
 class DownBullet(Bullet):
@@ -177,8 +181,10 @@ class DownBullet(Bullet):
             if type(x) == BaseEnemy or type(x) == Box:
                 x.get_hit(50)
                 self.kill()
+                return "damagedown"
             elif type(x) == Floor:
                 self.kill()
+                return "damagedown"
 
         x = pygame.sprite.spritecollideany(self, hero_sprites)
         if x:
@@ -211,8 +217,10 @@ class DownHeroBullet(Bullet):
             if type(x) == BaseEnemy or type(x) == Box:
                 x.get_hit(50)
                 self.kill()
+                return "damagedown"
             elif type(x) == Floor:
                 self.kill()
+                return "damagedown"
 
 
 class Person(pygame.sprite.Sprite):

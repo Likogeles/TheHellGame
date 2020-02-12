@@ -123,6 +123,11 @@ class Level:
         self.bullet_shoot_sound.set_volume(0.15)
         self.down_bullet_shoot_sound = pygame.mixer.Sound("data/Sounds/down_bullet.ogg")
 
+        self.bullet_damage_sound = pygame.mixer.Sound("data/Sounds/BaseEnemyDamage.ogg")
+        self.bullet_damage_sound.set_volume(0.15)
+        self.bulletdown_damage_sound = pygame.mixer.Sound("data/Sounds/DownBulletDamage.ogg")
+        self.bulletdown_damage_sound.set_volume(0.5)
+
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
             level_map = [line.strip() for line in mapFile]
@@ -176,9 +181,14 @@ class Level:
 
             for i in self.bullet_sprites:
                 x = i.fly(self.all_sprites, self.hero_sprites)
+
                 if type(x) == int:
                     if x <= 0:
                         return self.level_text
+                elif x == "damage":
+                    self.bullet_damage_sound.play()
+                elif x == "damagedown":
+                    self.bulletdown_damage_sound.play()
 
             for i in self.hp_sprites:
                 i.kill()
