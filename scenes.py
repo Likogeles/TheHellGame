@@ -129,7 +129,7 @@ class Level:
         self.bulletdown_damage_sound = pygame.mixer.Sound("data/Sounds/DownBulletDamage.ogg")
         self.bulletdown_damage_sound.set_volume(0.5)
         self.dubbullet_sound = pygame.mixer.Sound("data/Sounds/The Living Tombstone - Spooky scary skeleton.ogg")
-        self.dubbullet_sound.set_volume(0.5)
+        self.dubbullet_sound.set_volume(0.25)
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
@@ -166,11 +166,6 @@ class Level:
         self.bullet_sprites.draw(screen)
 
         self.hero_sprites.draw(screen)
-        if self.pause:
-            pygame.mouse.set_visible(True)
-            self.but_sprites.draw(screen)
-        else:
-            pygame.mouse.set_visible(False)
         if self.hero.weapons_slide == 0:
             self.bullet_0_slider.draw(screen)
         elif self.hero.weapons_slide == 1:
@@ -179,6 +174,13 @@ class Level:
             self.bullet_2_slider.draw(screen)
 
         self.dub_bullet_sprites.draw(screen)
+
+
+        if self.pause:
+            pygame.mouse.set_visible(True)
+            self.but_sprites.draw(screen)
+        else:
+            pygame.mouse.set_visible(False)
 
     def gravity(self):
         if not self.pause:

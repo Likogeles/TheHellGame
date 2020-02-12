@@ -144,7 +144,7 @@ def dialog_with_PLN(self, screen, x):
         screen.blit(self.dialog_font.render("пушку. Возьми ГОЛОВОКРАБ и уничтожай своих врагов!", 1, (0, 0, 0)), (110, 505))
         pygame.display.flip()
         saving_plot(4)
-        saving_guns(3)
+        saving_guns(2)
         click_wait()
     elif check_plot() == 4:
         self.dialog_sprites.draw(screen)
