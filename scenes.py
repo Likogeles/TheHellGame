@@ -119,6 +119,7 @@ class Level:
         self.bullet_0_slider = pygame.sprite.Group(BulletSliderSprite("bull_0_slider.png"))
         self.bullet_1_slider = pygame.sprite.Group(BulletSliderSprite("bull_1_slider.png"))
         self.bullet_2_slider = pygame.sprite.Group(BulletSliderSprite("bull_2_slider.png"))
+        self.bullet_3_slider = pygame.sprite.Group(BulletSliderSprite("bull_3_slider.png"))
 
         self.bullet_shoot_sound = pygame.mixer.Sound("data/Sounds/bullet.ogg")
         self.bullet_shoot_sound.set_volume(0.15)
@@ -169,17 +170,42 @@ class Level:
 
         self.hero_sprites.draw(screen)
         if self.hero.weapons_slide == 0:
+            self.dubbullet_sound.stop()
+            for i in self.dub_bullet_sprites:
+                i.kill()
             self.bullet_0_slider.draw(screen)
         elif self.hero.weapons_slide == 1:
+            self.dubbullet_sound.stop()
+            for i in self.dub_bullet_sprites:
+                i.kill()
             self.bullet_1_slider.draw(screen)
         elif self.hero.weapons_slide == 2:
+            self.dubbullet_sound.stop()
+            for i in self.dub_bullet_sprites:
+                i.kill()
             self.bullet_2_slider.draw(screen)
+        elif self.hero.weapons_slide == 3:
+            self.bullet_3_slider.draw(screen)
 
         self.dub_bullet_sprites.draw(screen)
 
         if self.pause:
+            self.hero.stop_all_move()
+            self.dubbullet_sound.stop()
+            for i in self.dub_bullet_sprites:
+                i.kill()
+            self.bullet_1_slider.draw(screen)
             pygame.mouse.set_visible(True)
             self.but_sprites.draw(screen)
+
+            if self.hero.weapons_slide == 0:
+                self.bullet_0_slider.draw(screen)
+            elif self.hero.weapons_slide == 1:
+                self.bullet_1_slider.draw(screen)
+            elif self.hero.weapons_slide == 2:
+                self.bullet_2_slider.draw(screen)
+            elif self.hero.weapons_slide == 3:
+                self.bullet_3_slider.draw(screen)
         else:
             pygame.mouse.set_visible(False)
 
@@ -192,6 +218,7 @@ class Level:
 
                 if type(x) == int:
                     if x <= 0:
+                        self.dubbullet_sound.stop()
                         return self.level_text
                 elif x == "damage":
                     self.bullet_damage_sound.play()
@@ -221,6 +248,7 @@ class Level:
                         self.all_sprites.add(x)
                     elif type(x) == Hero:
                         if x.hp <= 0:
+                            self.dubbullet_sound.stop()
                             return self.level_text
             for i in self.npc_sprites:
                 i.moving(self.floor_sprites)
@@ -411,6 +439,8 @@ class Level4(Level):
             for j in range(len(level[0])):
                 if level[i][j] == "=":
                     self.all_sprites.add(Floor(50 * j, 50 * i, "MusHell/floor_" + str(random.randint(0, 7)) + ".png", self.floor_sprites))
+                elif level[i][j] == "-":
+                    self.all_sprites.add(GoodEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "N":
                     if check_plot() == 4:
                         self.all_sprites.add(Npc(50 * j, 50 * i - 20, "РСЛ1v410", self.npc_sprites))

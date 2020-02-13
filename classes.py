@@ -239,30 +239,31 @@ class DubBullet(pygame.sprite.Sprite):
         self.t = 0
 
     def fly(self, all_sprites, hero_sprites):
-        y = [i for i in hero_sprites][0]
+        if [i for i in hero_sprites]:
+            y = [i for i in hero_sprites][0]
 
-        self.t += 1
-        if self.t > 20:
-            self.t = 0
-        if y.oldrunningwasright:
-            if self.t == 0:
-                self.image = self.right_images[0]
-            elif self.t == 10:
-                self.image = self.right_images[1]
-        else:
-            if self.t == 0:
-                self.image = self.left_images[0]
-            elif self.t == 10:
-                self.image = self.left_images[1]
+            self.t += 1
+            if self.t > 20:
+                self.t = 0
+            if y.oldrunningwasright:
+                if self.t == 0:
+                    self.image = self.right_images[0]
+                elif self.t == 10:
+                    self.image = self.right_images[1]
+            else:
+                if self.t == 0:
+                    self.image = self.left_images[0]
+                elif self.t == 10:
+                    self.image = self.left_images[1]
 
-        x = pygame.sprite.spritecollideany(self, all_sprites)
-        self.rect.y = y.rect.y
-        self.rect.x = y.rect.x - 35
-        if y.oldrunningwasright:
-            self.rect.x = y.rect.x + 50
-        if x:
-            if type(x) == BaseEnemy or type(x) == Box:
-                x.get_hit(10)
+            x = pygame.sprite.spritecollideany(self, all_sprites)
+            self.rect.y = y.rect.y
+            self.rect.x = y.rect.x - 35
+            if y.oldrunningwasright:
+                self.rect.x = y.rect.x + 50
+            if x:
+                if type(x) == BaseEnemy or type(x) == Box:
+                    x.get_hit(10)
 
 
 class Person(pygame.sprite.Sprite):
@@ -491,15 +492,18 @@ class Hero(Person):
                             x -= 50
                         return "DubBulletadd"
                 elif event.key == pygame.K_i:
+                    self.sinusbullet_shoot_sound.stop()
                     self.weapons_slide = 0
                 elif event.key == pygame.K_o:
                     if check_saves_guns() >= 1:
                         self.weapons_slide = 1
                 elif event.key == pygame.K_k:
                     if check_saves_guns() >= 2:
+                        self.sinusbullet_shoot_sound.stop()
                         self.weapons_slide = 2
                 elif event.key == pygame.K_l:
                     if check_saves_guns() >= 3:
+                        self.sinusbullet_shoot_sound.stop()
                         self.weapons_slide = 3
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_d or event.key == pygame.K_a:
@@ -546,9 +550,10 @@ class Hero(Person):
             self.shooting_log = False
 
     def stop_all_move(self):
-            self.right_move = False
-            self.left_move = False
-            self.shooting_log = False
+        self.sinusbullet_shoot_sound.stop()
+        self.right_move = False
+        self.left_move = False
+        self.shooting_log = False
 
 
 class GoodEnemy(Person):
