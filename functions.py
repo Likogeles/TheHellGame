@@ -19,6 +19,9 @@ def click_wait():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_j:
+                    click = False
 
 
 def load_image(name, colorkey=None):

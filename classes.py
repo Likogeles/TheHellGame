@@ -226,9 +226,14 @@ class DownHeroBullet(Bullet):
 class DubBullet(pygame.sprite.Sprite):
     def __init__(self, x, y, move_on_right, *group):
         super().__init__(*group)
-        self.right_images = [load_image("Bullets/bull_3_0.png", -1), load_image("Bullets/bull_3_1.png", -1)]
+        self.right_images = [load_image("Bullets/bull_3_0.png", -1), load_image("Bullets/bull_3_1.png", -1),
+                             load_image("Bullets/bull_3_2.png", -1), load_image("Bullets/bull_3_3.png", -1),
+                             load_image("Bullets/bull_3_4.png", -1)]
         self.left_images = [pygame.transform.flip(load_image("Bullets/bull_3_0.png", -1), True, False),
-                            pygame.transform.flip(load_image("Bullets/bull_3_1.png", -1), True, False)]
+                            pygame.transform.flip(load_image("Bullets/bull_3_1.png", -1), True, False),
+                            pygame.transform.flip(load_image("Bullets/bull_3_2.png", -1), True, False),
+                            pygame.transform.flip(load_image("Bullets/bull_3_3.png", -1), True, False),
+                            pygame.transform.flip(load_image("Bullets/bull_3_4.png", -1), True, False)]
         if move_on_right:
             self.image = self.right_images[0]
         else:
@@ -243,24 +248,25 @@ class DubBullet(pygame.sprite.Sprite):
             y = [i for i in hero_sprites][0]
 
             self.t += 1
-            if self.t > 20:
+            if self.t >= 20:
                 self.t = 0
-            if y.oldrunningwasright:
-                if self.t == 0:
-                    self.image = self.right_images[0]
-                elif self.t == 10:
-                    self.image = self.right_images[1]
-            else:
-                if self.t == 0:
-                    self.image = self.left_images[0]
-                elif self.t == 10:
-                    self.image = self.left_images[1]
+            if self.t == 0:
+                self.image = self.right_images[0] if y.oldrunningwasright else self.left_images[0]
+            elif self.t == 4:
+                self.image = self.right_images[1] if y.oldrunningwasright else self.left_images[1]
+            elif self.t == 8:
+                self.image = self.right_images[2] if y.oldrunningwasright else self.left_images[2]
+            elif self.t == 12:
+                self.image = self.right_images[3] if y.oldrunningwasright else self.left_images[3]
+            elif self.t == 16:
+                self.image = self.right_images[4] if y.oldrunningwasright else self.left_images[4]
 
-            x = pygame.sprite.spritecollideany(self, all_sprites)
-            self.rect.y = y.rect.y
-            self.rect.x = y.rect.x - 35
+            self.rect.y = y.rect.y - 20
+            self.rect.x = y.rect.x - 95
             if y.oldrunningwasright:
                 self.rect.x = y.rect.x + 50
+
+            x = pygame.sprite.spritecollideany(self, all_sprites)
             if x:
                 if type(x) == BaseEnemy or type(x) == Box:
                     x.get_hit(10)

@@ -86,6 +86,14 @@ class Listlevs:
 
 class Level:
     def __init__(self, level_text):
+
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_image("control.png")
+        sprite.rect = sprite.image.get_rect()
+        sprite.rect.x = 100
+        sprite.rect.y = 150
+        self.control_sprite = pygame.sprite.Group(sprite)
+
         self.hero_sprites = pygame.sprite.Group()
         self.npc_sprites = pygame.sprite.Group()
 
@@ -111,8 +119,11 @@ class Level:
         self.dialog_sprites = pygame.sprite.Group()
         self.dialog_sprites.add(Dialog_window())
 
-        Button("continue", "continuebut.png", 336, 300, self.but_sprites)
-        Button(self.level_text, "again.png", 336, 360, self.but_sprites)
+        if self.level_text == "level_1":
+            Button("continue", "continuebut.png", 336, 360, self.but_sprites)
+        else:
+            Button("continue", "continuebut.png", 336, 300, self.but_sprites)
+            Button(self.level_text, "again.png", 336, 360, self.but_sprites)
         Button("menu_", "exittomenu.png", 336, 420, self.but_sprites)
         Button("quit", "quitbut.png", 336, 480, self.but_sprites)
 
@@ -197,6 +208,7 @@ class Level:
             self.bullet_1_slider.draw(screen)
             pygame.mouse.set_visible(True)
             self.but_sprites.draw(screen)
+            self.control_sprite.draw(screen)
 
             if self.hero.weapons_slide == 0:
                 self.bullet_0_slider.draw(screen)
@@ -225,13 +237,13 @@ class Level:
                 elif x == "damagedown":
                     self.bulletdown_damage_sound.play()
             for i in self.dub_bullet_sprites:
-                x = i.fly(self.all_sprites, self.hero_sprites)
+                i.fly(self.all_sprites, self.hero_sprites)
 
             for i in self.hp_sprites:
                 i.kill()
             for i in range(self.hero.hp):
-                if i % 20 == 0:
-                    HealthPoint((i // 20) * 40 + 10, 10, self.hp_sprites)
+                if i % 10 == 0:
+                    HealthPoint((i // 10) * 40 + 10, 10, self.hp_sprites)
 
     def movingupdate(self):
         if not self.pause:
@@ -288,9 +300,9 @@ class Level:
                 elif x == "DubBulletadd":
                     self.dubbullet_sound.play(-1)
                     if self.hero.oldrunningwasright:
-                        self.dub_bullet_sprites.add(DubBullet(self.hero.rect.x + 50, self.hero.rect.y, self.hero.oldrunningwasright))
+                        self.dub_bullet_sprites.add(DubBullet(self.hero.rect.x + 50, self.hero.rect.y - 20, self.hero.oldrunningwasright))
                     else:
-                        self.dub_bullet_sprites.add(DubBullet(self.hero.rect.x - 35, self.hero.rect.y, self.hero.oldrunningwasright))
+                        self.dub_bullet_sprites.add(DubBullet(self.hero.rect.x - 95, self.hero.rect.y - 20, self.hero.oldrunningwasright))
                 elif x == "DubBulletremove":
                     self.dubbullet_sound.stop()
                     for i in self.dub_bullet_sprites:
