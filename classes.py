@@ -712,3 +712,41 @@ class UpEnemy(Person):
                     self.herowas = False
                     return DownBullet(self.rect.x + 5, self.rect.y + 30, 5)
             return None
+
+
+class Saw(pygame.sprite.Sprite):
+    def __init__(self, x, y, *group):
+        super().__init__(*group)
+        self.image = load_image("Bullets/saw.png", -1)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.oldrunningwasright = True
+        self.wasDamage = False
+
+    def animate(self):
+        pass
+
+    def moving(self, floor_sprites, hero_sprites):
+        if self.oldrunningwasright:
+            if check_block(self.rect.x + 70, self.rect.y + 50, floor_sprites) and \
+                    not (check_block(self.rect.x + 70, self.rect.y + 15, floor_sprites)):
+                self.rect.x += 10
+            else:
+                self.oldrunningwasright = False
+        else:
+            if check_block(self.rect.x - 10, self.rect.y + 50, floor_sprites) and \
+                    not (check_block(self.rect.x - 10, self.rect.y + 15, floor_sprites)):
+                self.rect.x -= 10
+            else:
+                self.oldrunningwasright = True
+
+        x = pygame.sprite.spritecollideany(self, hero_sprites)
+        if x:
+            if type(x) == Hero:
+                if self.wasDamage:
+                    self.wasDamage = False
+                    x.get_hit(20)
+                    return x
+        else:
+            self.wasDamage = True

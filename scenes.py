@@ -5,9 +5,9 @@ import random
 from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window
 from classes import Floor, Endlevel, Box
 from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet, DubBullet
-from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy
+from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw
 from functions import load_image, saving_location, check_continue, check_plot
-from dialogues import dialog_with_AGT, dialog_with_ILD, dialog_with_PLN
+from dialogues import dialog_with_AGT, dialog_with_ILD, dialog_with_PLN, dialog_with_RSL
 
 
 class Menu:
@@ -149,6 +149,8 @@ class Level:
                     self.all_sprites.add(BaseEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "&":
                     self.all_sprites.add(UpEnemy(50 * j, 50 * i, self.enemy_sprites))
+                elif level[i][j] == "_":
+                    self.all_sprites.add(Saw(50 * j, 50 * i + 10, self.enemy_sprites))
 
     def render(self, screen):
         screen.fill((0, 0, 0))
@@ -174,7 +176,6 @@ class Level:
             self.bullet_2_slider.draw(screen)
 
         self.dub_bullet_sprites.draw(screen)
-
 
         if self.pause:
             pygame.mouse.set_visible(True)
@@ -208,14 +209,19 @@ class Level:
     def movingupdate(self):
         if not self.pause:
             for i in self.enemy_sprites:
-                new_bullet = i.moving(self.floor_sprites, self.hero_sprites)
-                if new_bullet:
-                    if type(new_bullet) == Bullet:
+                x = i.moving(self.floor_sprites, self.hero_sprites)
+                if x:
+                    if type(x) == Bullet:
                         self.bullet_shoot_sound.play()
-                    elif type(new_bullet) == DownBullet:
+                        self.bullet_sprites.add(x)
+                        self.all_sprites.add(x)
+                    elif type(x) == DownBullet:
                         self.down_bullet_shoot_sound.play()
-                    self.bullet_sprites.add(new_bullet)
-                    self.all_sprites.add(new_bullet)
+                        self.bullet_sprites.add(x)
+                        self.all_sprites.add(x)
+                    elif type(x) == Hero:
+                        if x.hp <= 0:
+                            return self.level_text
             for i in self.npc_sprites:
                 i.moving(self.floor_sprites)
 
@@ -261,7 +267,7 @@ class Level:
                     self.dubbullet_sound.stop()
                     for i in self.dub_bullet_sprites:
                         i.kill()
-                elif x == "level_1" or x == "level_2" or x == "level_3" or x == "menu_":
+                elif x == "level_1" or x == "level_2" or x == "level_3" or x == "level_4" or x == "menu_":
                     self.dubbullet_sound.stop()
                     return x
                 elif x[:12] == "dialogwindow":
@@ -274,6 +280,8 @@ class Level:
                         y = dialog_with_ILD(self, screen, x)
                     elif x[12:] == "ПЛН0v105":
                         y = dialog_with_PLN(self, screen, x)
+                    elif x[12:] == "РСЛ1v410":
+                        y = dialog_with_RSL(self, screen, x)
                     if y:
                         self.dubbullet_sound.stop()
                         return y
@@ -324,7 +332,7 @@ class Level1(Level):
                         self.all_sprites.add(Npc(50 * j, 50 * i - 20, "АГТ2v512", self.npc_sprites))
                     elif num_of_npc == 3:
                         if check_plot() >= 5:
-                            self.all_sprites.add(Npc(50 * j, 50 * i - 20, "РСЛ1v409", self.npc_sprites))
+                            self.all_sprites.add(Npc(50 * j, 50 * i - 20, "РСЛ1v410", self.npc_sprites))
                     num_of_npc += 1
                 elif level[i][j] == "+":
                     if num_of_level == 0:
@@ -382,5 +390,29 @@ class Level3(Level):
                 elif level[i][j] == "N":
                     if check_plot() == 2:
                         self.all_sprites.add(Npc(50 * j, 50 * i - 20, "ПЛН0v105", self.npc_sprites))
+                elif level[i][j] == "+":
+                    Endlevel(50 * j, 50 * i - 50, "level_1", "level1.png", self.all_sprites)
+
+
+class Level4(Level):
+    def __init__(self, level_text):
+        super().__init__(level_text)
+        saving_location(4)
+        pygame.mixer.music.load("data/Music/level3.mp3")
+        pygame.mixer.music.play(-1)
+
+        filename = "data/LevelsLists/" + level_text
+        with open(filename, 'r') as mapFile:
+            level_map = [line.strip() for line in mapFile]
+        max_width = max(map(len, level_map))
+        level = list(map(lambda x: x.ljust(max_width, '.'), level_map))
+
+        for i in range(len(level)):
+            for j in range(len(level[0])):
+                if level[i][j] == "=":
+                    self.all_sprites.add(Floor(50 * j, 50 * i, "MusHell/floor_" + str(random.randint(0, 7)) + ".png", self.floor_sprites))
+                elif level[i][j] == "N":
+                    if check_plot() == 4:
+                        self.all_sprites.add(Npc(50 * j, 50 * i - 20, "РСЛ1v410", self.npc_sprites))
                 elif level[i][j] == "+":
                     Endlevel(50 * j, 50 * i - 50, "level_1", "level1.png", self.all_sprites)

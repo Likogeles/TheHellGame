@@ -1,6 +1,6 @@
 import pygame
 
-from scenes import Menu, Listlevs, Level1, Level2, Level3
+from scenes import Menu, Listlevs, Level1, Level2, Level3, Level4
 from functions import load_image, terminate, check_location, new_game_save
 
 
@@ -22,7 +22,7 @@ pygame.mixer.music.set_volume(0.1)
 scenename = "menu_"
 oldscenname = scenename
 scenenames = ["newgame", "menu_", "menu", "continue", "listlevs_", "listlevs",
-              "level_1", "level1", "level_2", "level2", "level_3", "level3", "quit"]
+              "level_1", "level1", "level_2", "level2", "level_3", "level3", "level_4", "level4", "quit"]
 
 download_image = pygame.sprite.Sprite()
 download_image.image = load_image("download.png")
@@ -76,6 +76,9 @@ while True:
             Scene = Level3("Level_3.txt")
             scenename = "level3"
             pygame.mixer.music.set_volume(0.4)
+        elif check_location() == 4:
+            Scene = Level4("Level_4.txt")
+            scenename = "level4"
     elif scenename == "level_1":
         Scene = Level1("Level_1.txt")
         scenename = "level1"
@@ -88,6 +91,10 @@ while True:
         Scene = Level3("Level_3.txt")
         scenename = "level3"
         pygame.mixer.music.set_volume(0.2)
+    elif scenename == "level_4":
+        Scene = Level4("Level_4.txt")
+        scenename = "level4"
+        pygame.mixer.music.set_volume(0.1)
     # Сюда нужно подставлять остальные сцены по мере их готовности
 
     for event in pygame.event.get():
@@ -103,7 +110,9 @@ while True:
             elif event.type == ENEMYANIMATEEVENT:
                 Scene.enemyanimateupdate()
             elif event.type == MOVINGEVENT:
-                Scene.movingupdate()
+                x = Scene.movingupdate()
+                if x:
+                    scenename = x
             elif event.type == SHOOTINGEVENT:
                 Scene.hero_shoot()
             x = Scene.eventupdate(event, screen)
