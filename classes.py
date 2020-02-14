@@ -728,17 +728,36 @@ class UpEnemy(Person):
 class Saw(pygame.sprite.Sprite):
     def __init__(self, x, y, *group):
         super().__init__(*group)
-        self.image = load_image("Bullets/saw.png", -1)
+        self.images = [load_image("Bullets/saw_0.png", -1), load_image("Bullets/saw_1.png", -1),
+                       load_image("Bullets/saw_2.png", -1), load_image("Bullets/saw_3.png", -1),
+                       load_image("Bullets/saw_4.png", -1), load_image("Bullets/saw_5.png", -1)]
+        self.image = self.images[0]
+        self.t = 0
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.oldrunningwasright = True
         self.wasDamage = False
 
+        self.beginsound = True
+        self.saw_sound = pygame.mixer.Sound("data/Sounds/saw.ogg")
+        self.saw_sound.set_volume(0.1)
+
     def animate(self):
-        pass
+        self.image = self.images[self.t]
+        self.t += 1
+        if self.t > 5:
+            self.t = 0
 
     def moving(self, floor_sprites, hero_sprites):
+        if self_on_screen(self):
+            if self.beginsound:
+                self.saw_sound.play(-1)
+                self.beginsound = False
+        else:
+            self.beginsound = True
+            self.saw_sound.stop()
+
         if self.oldrunningwasright:
             if check_block(self.rect.x + 70, self.rect.y + 50, floor_sprites) and \
                     not (check_block(self.rect.x + 70, self.rect.y + 15, floor_sprites)):

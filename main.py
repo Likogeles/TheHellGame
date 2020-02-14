@@ -79,6 +79,7 @@ while True:
         elif check_location() == 4:
             Scene = Level4("Level_4.txt")
             scenename = "level4"
+            pygame.mixer.music.set_volume(0.1)
     elif scenename == "level_1":
         Scene = Level1("Level_1.txt")
         scenename = "level1"

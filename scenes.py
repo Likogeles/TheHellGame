@@ -230,6 +230,9 @@ class Level:
 
                 if type(x) == int:
                     if x <= 0:
+                        for i in self.enemy_sprites:
+                            if type(i) == Saw:
+                                i.saw_sound.stop()
                         self.dubbullet_sound.stop()
                         return self.level_text
                 elif x == "damage":
@@ -287,6 +290,9 @@ class Level:
                     self.pause = not self.pause
                 else:
                     self.dubbullet_sound.stop()
+                    for i in self.enemy_sprites:
+                        if type(i) == Saw:
+                            i.saw_sound.stop()
                     return x
         else:
             x = self.hero.eventin(event, self.floor_sprites, self.all_sprites, self.npc_sprites)
@@ -308,9 +314,15 @@ class Level:
                     for i in self.dub_bullet_sprites:
                         i.kill()
                 elif x == "level_1" or x == "level_2" or x == "level_3" or x == "level_4" or x == "menu_":
+                    for i in self.enemy_sprites:
+                        if type(i) == Saw:
+                            i.saw_sound.stop()
                     self.dubbullet_sound.stop()
                     return x
                 elif x[:12] == "dialogwindow":
+                    self.dubbullet_sound.stop()
+                    for i in self.dub_bullet_sprites:
+                        i.kill()
                     self.hero.stop_all_move()
                     self.render(screen)
                     y = None
@@ -323,6 +335,9 @@ class Level:
                     elif x[12:] == "РСЛ1v410":
                         y = dialog_with_RSL(self, screen, x)
                     if y:
+                        for i in self.enemy_sprites:
+                            if type(i) == Saw:
+                                i.saw_sound.stop()
                         self.dubbullet_sound.stop()
                         return y
 
@@ -438,7 +453,7 @@ class Level4(Level):
     def __init__(self, level_text):
         super().__init__(level_text)
         saving_location(4)
-        pygame.mixer.music.load("data/Music/level3.mp3")
+        pygame.mixer.music.load("data/Music/level4.mp3")
         pygame.mixer.music.play(-1)
 
         filename = "data/LevelsLists/" + level_text
