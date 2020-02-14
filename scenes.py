@@ -161,6 +161,8 @@ class Level:
                     self.all_sprites.add(BaseEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "&":
                     self.all_sprites.add(UpEnemy(50 * j, 50 * i, self.enemy_sprites))
+                elif level[i][j] == "-":
+                    self.all_sprites.add(GoodEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "_":
                     self.all_sprites.add(Saw(50 * j, 50 * i + 10, self.enemy_sprites))
 
@@ -374,8 +376,6 @@ class Level1(Level):
             for j in range(len(level[0])):
                 if level[i][j] == "=":
                     self.all_sprites.add(Floor(50 * j, 50 * i, "Hub/floor_" + str(random.randint(0, 11)) + ".png", self.floor_sprites))
-                elif level[i][j] == "-":
-                    self.all_sprites.add(GoodEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "N":
                     if num_of_npc == 0:
                         if check_plot() >= 1:
@@ -466,8 +466,6 @@ class Level4(Level):
             for j in range(len(level[0])):
                 if level[i][j] == "=":
                     self.all_sprites.add(Floor(50 * j, 50 * i, "MusHell/floor_" + str(random.randint(0, 7)) + ".png", self.floor_sprites))
-                elif level[i][j] == "-":
-                    self.all_sprites.add(GoodEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "N":
                     if check_plot() == 4:
                         self.all_sprites.add(Npc(50 * j, 50 * i - 20, "РСЛ1v410", self.npc_sprites))
