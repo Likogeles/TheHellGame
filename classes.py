@@ -54,9 +54,31 @@ class Floor(pygame.sprite.Sprite):
 class Box(Floor):
     def __init__(self, x, y, imgname, *group):
         super().__init__(x, y, imgname, *group)
-        self.gravity_acceleration = 0
-        self.gravity_log = True
         self.hp = 100
+        self.t = 0
+
+    def get_hit(self, damage):
+        if self.t == 0:
+            self.rect.x += 2
+        elif self.t == 1:
+            self.rect.x -= 2
+        elif self.t == 2:
+            self.rect.x -= 2
+        elif self.t == 3:
+            self.rect.x += 2
+        self.t += 1
+        if self.t > 3:
+            self.t = 0
+
+        self.hp -= damage
+        if self.hp <= 0:
+            self.kill()
+
+
+class Glass(Floor):
+    def __init__(self, x, y, imgname, *group):
+        super().__init__(x, y, imgname, *group)
+        self.hp = 1000
         self.t = 0
 
     def get_hit(self, damage):
@@ -126,7 +148,7 @@ class Bullet(pygame.sprite.Sprite):
                 x.get_hit(20)
                 self.kill()
                 return "damage"
-            elif type(x) == Floor:
+            elif type(x) == Floor or type(x) == Glass:
                 self.kill()
                 return "damage"
 
@@ -158,7 +180,7 @@ class SinusBullet(Bullet):
                 x.get_hit(5)
                 self.kill()
                 return "damage"
-            elif type(x) == Floor:
+            elif type(x) == Floor or type(x) == Glass:
                 self.kill()
                 return "damage"
 
@@ -218,7 +240,7 @@ class DownHeroBullet(Bullet):
                 x.get_hit(50)
                 self.kill()
                 return "damagedown"
-            elif type(x) == Floor:
+            elif type(x) == Floor or type(x) == Glass:
                 self.kill()
                 return "damagedown"
 
@@ -270,6 +292,11 @@ class DubBullet(pygame.sprite.Sprite):
             if x:
                 if type(x) == BaseEnemy or type(x) == Box:
                     x.get_hit(10)
+                elif type(x) == Glass:
+                    x.get_hit(10)
+                    if x.hp <= 0:
+                        return "break"
+                    return "tresk"
 
 
 class Person(pygame.sprite.Sprite):

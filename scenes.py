@@ -3,7 +3,7 @@ import time
 import random
 
 from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window
-from classes import Floor, Endlevel, Box
+from classes import Floor, Endlevel, Box, Glass
 from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet, DubBullet
 from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw
 from functions import load_image, saving_location, check_continue, check_plot
@@ -142,6 +142,8 @@ class Level:
         self.bulletdown_damage_sound.set_volume(0.5)
         self.dubbullet_sound = pygame.mixer.Sound("data/Sounds/The Living Tombstone - Spooky scary skeleton.ogg")
         self.dubbullet_sound.set_volume(0.25)
+        self.glass_break_sound = pygame.mixer.Sound("data/Sounds/break.ogg")
+        self.glass_break_sound.set_volume(0.5)
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
@@ -153,6 +155,10 @@ class Level:
             for j in range(len(level[0])):
                 if level[i][j] == "0":
                     x = Box(50 * j, 50 * i, "box.png", self.boxes_sprites)
+                    self.all_sprites.add(x)
+                    self.floor_sprites.add(x)
+                elif level[i][j] == "G":
+                    x = Glass(50 * j, 50 * i, "glass.png", self.boxes_sprites)
                     self.all_sprites.add(x)
                     self.floor_sprites.add(x)
                 elif level[i][j] == "@":
@@ -242,7 +248,9 @@ class Level:
                 elif x == "damagedown":
                     self.bulletdown_damage_sound.play()
             for i in self.dub_bullet_sprites:
-                i.fly(self.all_sprites, self.hero_sprites)
+                x = i.fly(self.all_sprites, self.hero_sprites)
+                if x == "break":
+                    self.glass_break_sound.play()
 
             for i in self.hp_sprites:
                 i.kill()
