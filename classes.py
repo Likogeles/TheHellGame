@@ -52,8 +52,8 @@ class Floor(pygame.sprite.Sprite):
 
 
 class Box(Floor):
-    def __init__(self, x, y, imgname, *group):
-        super().__init__(x, y, imgname, *group)
+    def __init__(self, x, y, *group):
+        super().__init__(x, y, "box.png", *group)
         self.hp = 100
         self.t = 0
 
@@ -76,25 +76,39 @@ class Box(Floor):
 
 
 class Glass(Floor):
-    def __init__(self, x, y, imgname, *group):
-        super().__init__(x, y, imgname, *group)
+    def __init__(self, x, y, *group):
+        super().__init__(x, y, "Glass\glass_0.png", *group)
+        self.images = [load_image("Floor\Glass\glass_0.png", -1),
+                       load_image("Floor\Glass\glass_1.png", -1),
+                       load_image("Floor\Glass\glass_2.png", -1),
+                       load_image("Floor\Glass\glass_3.png", -1),
+                       load_image("Floor\Glass\glass_4.png", -1)]
         self.hp = 1000
         self.t = 0
 
     def get_hit(self, damage):
         if self.t == 0:
-            self.rect.x += 2
+            self.rect.x += 1
         elif self.t == 1:
-            self.rect.x -= 2
+            self.rect.x -= 1
         elif self.t == 2:
-            self.rect.x -= 2
+            self.rect.x -= 1
         elif self.t == 3:
-            self.rect.x += 2
+            self.rect.x += 1
         self.t += 1
         if self.t > 3:
             self.t = 0
 
         self.hp -= damage
+        print(self.hp)
+        if 600 < self.hp <= 800:
+            self.image = self.images[1]
+        elif 400 < self.hp <= 600:
+            self.image = self.images[2]
+        elif 200 < self.hp <= 400:
+            self.image = self.images[3]
+        elif 0 < self.hp <= 200:
+            self.image = self.images[4]
         if self.hp <= 0:
             self.kill()
 

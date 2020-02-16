@@ -154,11 +154,11 @@ class Level:
         for i in range(len(level)):
             for j in range(len(level[0])):
                 if level[i][j] == "0":
-                    x = Box(50 * j, 50 * i, "box.png", self.boxes_sprites)
+                    x = Box(50 * j, 50 * i, self.boxes_sprites)
                     self.all_sprites.add(x)
                     self.floor_sprites.add(x)
                 elif level[i][j] == "G":
-                    x = Glass(50 * j, 50 * i, "glass.png", self.boxes_sprites)
+                    x = Glass(50 * j, 50 * i, self.boxes_sprites)
                     self.all_sprites.add(x)
                     self.floor_sprites.add(x)
                 elif level[i][j] == "@":
