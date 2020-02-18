@@ -100,7 +100,6 @@ class Glass(Floor):
             self.t = 0
 
         self.hp -= damage
-        print(self.hp)
         if 600 < self.hp <= 800:
             self.image = self.images[1]
         elif 400 < self.hp <= 600:
