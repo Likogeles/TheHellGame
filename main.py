@@ -13,7 +13,7 @@ pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
 
 
-pygame.display.set_caption("Hell Game")
+pygame.display.set_caption("The Hell Game")
 pygame.display.set_icon(pygame.image.load("data/SpritesList/icon.png"))
 screen = pygame.display.set_mode((972, 600))
 

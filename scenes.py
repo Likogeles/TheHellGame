@@ -58,13 +58,16 @@ class Menu:
 class Listlevs:
     def __init__(self):
         self.menu_but_sprites = pygame.sprite.Group()
-        Button("level_1", "level_1.png", 336, 240, self.menu_but_sprites)
+        if check_continue():
+            Button("level_1", "level_1.png", 336, 180, self.menu_but_sprites)
         if check_plot() >= 1:
-            Button("level_2", "level_2.png", 336, 300, self.menu_but_sprites)
+            Button("level_2", "level_2.png", 336, 240, self.menu_but_sprites)
         if check_plot() >= 3:
-            Button("level_3", "level_3.png", 336, 360, self.menu_but_sprites)
+            Button("level_3", "level_3.png", 336, 300, self.menu_but_sprites)
         if check_plot() >= 5:
-            Button("level_4", "level_4.png", 336, 420, self.menu_but_sprites)
+            Button("level_4", "level_4.png", 336, 360, self.menu_but_sprites)
+        if check_plot() >= 7:
+            Button("level_5", "level_5.png", 336, 420, self.menu_but_sprites)
         Button("menu_", "back.png", 336, 480, self.menu_but_sprites)
         pygame.mixer.music.load("data/Music/themesound.mp3")
         pygame.mixer.music.play()
@@ -415,6 +418,13 @@ class Level1(Level):
         saving_location(1)
         pygame.mixer.music.load("data/Music/themesound.mp3")
         pygame.mixer.music.play()
+        if check_plot() == 7:
+            Sprite = pygame.sprite.Sprite()
+            Sprite.image = load_image("Titres.png")
+            Sprite.rect = Sprite.image.get_rect()
+            Sprite.rect.x = 550
+            Sprite.rect.y = 65
+            self.all_sprites.add(Sprite)
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:

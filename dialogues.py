@@ -276,7 +276,7 @@ def dialog_with_RSL(self, screen, x):
         self.dialog_sprites.draw(screen)
         screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
         screen.blit(self.dialog_font.render("Оно смогло поглотить нашу технику и даже воспарить", 1, (0, 0, 0)), (110, 430))
-        screen.blit(self.dialog_font.render("над землёй, за счёт неё. Возможно её следовало", 1, (0, 0, 0)), (110, 455))
+        screen.blit(self.dialog_font.render("над землёй, за счёт неё. Возможно его следовало", 1, (0, 0, 0)), (110, 455))
         screen.blit(self.dialog_font.render("оставить в живых и изучить...", 1, (0, 0, 0)), (110, 480))
         pygame.display.flip()
         click_wait()
