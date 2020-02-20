@@ -153,6 +153,7 @@ class Level:
         self.glass_break_sound = pygame.mixer.Sound("data/Sounds/break.ogg")
         self.glass_break_sound.set_volume(0.5)
         self.death_sound = pygame.mixer.Sound("data/Sounds/death.ogg")
+        self.death_sound.set_volume(0.5)
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
@@ -267,6 +268,7 @@ class Level:
                             if type(j) == Saw:
                                 j.saw_sound.stop()
                         self.dubbullet_sound.stop()
+                        pygame.mixer.music.stop()
                         self.death_sound.play()
                         self.death(screen)
                         return self.level_text
@@ -285,7 +287,7 @@ class Level:
                 if i % 10 == 0:
                     HealthPoint((i // 10) * 40 + 10, 10, self.hp_sprites)
 
-    def movingupdate(self):
+    def movingupdate(self, screen):
         if not self.pause:
             for i in self.enemy_sprites:
                 x = i.moving(self.floor_sprites, self.hero_sprites)
@@ -301,6 +303,12 @@ class Level:
                     elif type(x) == Hero:
                         if x.hp <= 0:
                             self.dubbullet_sound.stop()
+                            for i in self.enemy_sprites:
+                                if type(i) == Saw:
+                                    i.saw_sound.stop()
+                            pygame.mixer.music.stop()
+                            self.death_sound.play()
+                            self.death(screen)
                             return self.level_text
             for i in self.npc_sprites:
                 i.moving(self.floor_sprites)
@@ -350,7 +358,7 @@ class Level:
                     self.dubbullet_sound.stop()
                     for i in self.dub_bullet_sprites:
                         i.kill()
-                elif x == "level_1" or x == "level_2" or x == "level_3" or x == "level_4" or x == "menu_":
+                elif x == "level_1" or x == "level_2" or x == "level_3" or x == "level_4" or x == "level_5" or x == "menu_":
                     for i in self.enemy_sprites:
                         if type(i) == Saw:
                             i.saw_sound.stop()
@@ -489,6 +497,30 @@ class Level4(Level):
         super().__init__(level_text)
         saving_location(4)
         pygame.mixer.music.load("data/Music/level4.mp3")
+        pygame.mixer.music.play(-1)
+
+        filename = "data/LevelsLists/" + level_text
+        with open(filename, 'r') as mapFile:
+            level_map = [line.strip() for line in mapFile]
+        max_width = max(map(len, level_map))
+        level = list(map(lambda x: x.ljust(max_width, '.'), level_map))
+
+        for i in range(len(level)):
+            for j in range(len(level[0])):
+                if level[i][j] == "=":
+                    self.all_sprites.add(Floor(50 * j, 50 * i, "MusHell/floor_" + str(random.randint(0, 7)) + ".png", self.floor_sprites))
+                elif level[i][j] == "N":
+                    if check_plot() == 4:
+                        self.all_sprites.add(Npc(50 * j, 50 * i - 20, "РСЛ1v410", self.npc_sprites))
+                elif level[i][j] == "+":
+                    Endlevel(50 * j, 50 * i - 50, "level_1", "level1.png", self.all_sprites)
+
+
+class Level5(Level):
+    def __init__(self, level_text):
+        super().__init__(level_text)
+        saving_location(5)
+        pygame.mixer.music.load("data/Music/level5.mp3")
         pygame.mixer.music.play(-1)
 
         filename = "data/LevelsLists/" + level_text
