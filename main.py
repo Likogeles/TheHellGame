@@ -98,12 +98,14 @@ while True:
         pygame.mixer.music.set_volume(0.1)
     # Сюда нужно подставлять остальные сцены по мере их готовности
 
+    Scene.render(screen)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         if "level" in scenename[:5]:
             if event.type == GRAVITYEVENT:
-                x = Scene.gravity()
+                x = Scene.gravity(screen)
                 if x:
                     scenename = x
             elif event.type == ANIMATEEVENT:
@@ -130,6 +132,4 @@ while True:
         if scenename not in scenenames:
             print("Нет сцены " + scenename)
             terminate()
-
-    Scene.render(screen)
     pygame.display.flip()

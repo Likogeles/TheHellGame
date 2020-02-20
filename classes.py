@@ -131,6 +131,15 @@ class Dialog_window(pygame.sprite.Sprite):
         self.rect.y = 270
 
 
+class Death_image(pygame.sprite.Sprite):
+    def __init__(self, x, y, image, *group):
+        super().__init__(*group)
+        self.image = pygame.transform.scale(load_image(image, -1), (90, 90))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
 class BulletSliderSprite(pygame.sprite.Sprite):
     def __init__(self, imgname, *group):
         super().__init__(*group)

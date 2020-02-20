@@ -5,7 +5,7 @@ import random
 from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window
 from classes import Floor, Endlevel, Box, Glass
 from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet, DubBullet
-from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw
+from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw, Death_image
 from functions import load_image, saving_location, check_continue, check_plot
 from dialogues import dialog_with_AGT, dialog_with_ILD, dialog_with_PLN, dialog_with_RSL
 
@@ -118,6 +118,7 @@ class Level:
         self.dialog_font = pygame.font.Font(None, 30)
         self.dialog_sprites = pygame.sprite.Group()
         self.dialog_sprites.add(Dialog_window())
+        self.death_sprites = pygame.sprite.Group()
 
         if self.level_text == "level_1":
             Button("continue", "continuebut.png", 336, 360, self.but_sprites)
@@ -144,6 +145,7 @@ class Level:
         self.dubbullet_sound.set_volume(0.25)
         self.glass_break_sound = pygame.mixer.Sound("data/Sounds/break.ogg")
         self.glass_break_sound.set_volume(0.5)
+        self.death_sound = pygame.mixer.Sound("data/Sounds/death.ogg")
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
@@ -229,7 +231,23 @@ class Level:
         else:
             pygame.mouse.set_visible(False)
 
-    def gravity(self):
+    def death(self, screen):
+        self.death_sprites.add(Death_image(self.hero.rect.x - 45, self.hero.rect.y, "Hero/death_0.png"))
+        for r in range(10, 1000, 5):
+            x = self.hero.rect.x + 25
+            y = self.hero.rect.y + 45
+            screen.fill((0, 0, 0))
+            self.render(screen)
+            pygame.draw.circle(screen, (0, 0, 255), (x, y), r)
+            pygame.draw.circle(screen, (0, 0, 0), (x, y), r - 10)
+            if r % 125 == 0:
+                for i in self.death_sprites:
+                    i.kill()
+                self.death_sprites.add(Death_image(self.hero.rect.x - 45, self.hero.rect.y, "Hero/death_" + str(r // 125) + ".png"))
+            self.death_sprites.draw(screen)
+            pygame.display.flip()
+
+    def gravity(self, screen):
         if not self.pause:
             self.hero.gravity(self.floor_sprites, self.all_sprites)
 
@@ -238,10 +256,12 @@ class Level:
 
                 if type(x) == int:
                     if x <= 0:
-                        for i in self.enemy_sprites:
-                            if type(i) == Saw:
-                                i.saw_sound.stop()
+                        for j in self.enemy_sprites:
+                            if type(j) == Saw:
+                                j.saw_sound.stop()
                         self.dubbullet_sound.stop()
+                        self.death_sound.play()
+                        self.death(screen)
                         return self.level_text
                 elif x == "damage":
                     self.bullet_damage_sound.play()
