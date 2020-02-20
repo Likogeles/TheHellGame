@@ -727,10 +727,9 @@ class BaseEnemy(Person):
                         self.bullet_spawn += 1
                 else:
                     self.bullet_spawn = 50
-                    if self.rect.x % 10 == 0:
-                        if check_block(self.rect.x + 45, self.rect.y + 50, floor_sprites) or \
-                                not check_block(self.rect.x + 45, self.rect.y + 100, floor_sprites):
-                            self.oldrunningwasright = False
+                    if check_block(self.rect.x + 50, self.rect.y + 50, floor_sprites) or \
+                            not check_block(self.rect.x + 50, self.rect.y + 100, floor_sprites):
+                        self.oldrunningwasright = False
                     self.rect.x += 1
             else:
                 if check_hero(self.rect.x - 25, self.rect.y + 10, False, hero_sprites):
@@ -741,10 +740,9 @@ class BaseEnemy(Person):
                         self.bullet_spawn += 1
                 else:
                     self.bullet_spawn = 50
-                    if self.rect.x % 50 == 0:
-                        if (check_block(self.rect.x - 20, self.rect.y + 50, floor_sprites)) or \
-                                not check_block(self.rect.x - 20, self.rect.y + 100, floor_sprites):
-                            self.oldrunningwasright = True
+                    if (check_block(self.rect.x - 5, self.rect.y + 50, floor_sprites)) or \
+                            not check_block(self.rect.x - 5, self.rect.y + 100, floor_sprites):
+                        self.oldrunningwasright = True
                     self.rect.x -= 1
             return None
 

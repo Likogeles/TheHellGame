@@ -58,8 +58,13 @@ class Menu:
 class Listlevs:
     def __init__(self):
         self.menu_but_sprites = pygame.sprite.Group()
-        Button("level_1", "level_1.png", 336, 300, self.menu_but_sprites)
-        Button("level_2", "level_2.png", 336, 360, self.menu_but_sprites)
+        Button("level_1", "level_1.png", 336, 240, self.menu_but_sprites)
+        if check_plot() >= 1:
+            Button("level_2", "level_2.png", 336, 300, self.menu_but_sprites)
+        if check_plot() >= 3:
+            Button("level_3", "level_3.png", 336, 360, self.menu_but_sprites)
+        if check_plot() >= 5:
+            Button("level_4", "level_4.png", 336, 420, self.menu_but_sprites)
         Button("menu_", "back.png", 336, 480, self.menu_but_sprites)
         pygame.mixer.music.load("data/Music/themesound.mp3")
         pygame.mixer.music.play()
