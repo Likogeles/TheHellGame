@@ -14,6 +14,7 @@ pygame.mixer.init()
 
 
 pygame.display.set_caption("Hell Game")
+pygame.display.set_icon(pygame.image.load("data/SpritesList/icon.png"))
 screen = pygame.display.set_mode((972, 600))
 
 pygame.mixer.music.load("data/Music/themesound.mp3")
