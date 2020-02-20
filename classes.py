@@ -175,7 +175,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
         x = pygame.sprite.spritecollideany(self, all_sprites)
         if x:
-            if type(x) == BaseEnemy or type(x) == Box:
+            if type(x) == BaseEnemy or type(x) == Box or type(x) == Boss:
                 x.get_hit(20)
                 self.kill()
                 return "damage"
@@ -207,7 +207,7 @@ class SinusBullet(Bullet):
             self.kill()
         x = pygame.sprite.spritecollideany(self, all_sprites)
         if x:
-            if type(x) == BaseEnemy or type(x) == Box:
+            if type(x) == BaseEnemy or type(x) == Box or type(x) == Boss:
                 x.get_hit(5)
                 self.kill()
                 return "damage"
@@ -267,7 +267,7 @@ class DownHeroBullet(Bullet):
             self.kill()
         x = pygame.sprite.spritecollideany(self, all_sprites)
         if x:
-            if type(x) == BaseEnemy or type(x) == Box:
+            if type(x) == BaseEnemy or type(x) == Box or type(x) == Boss:
                 x.get_hit(50)
                 self.kill()
                 return "damagedown"
@@ -339,11 +339,13 @@ class Person(pygame.sprite.Sprite):
         self.rect.y = y
         self.oldrunningwasright = True
         self.hp = 100
+        self.immortal = False
 
     def get_hit(self, damage):
-        self.hp -= damage
-        if self.hp <= 0:
-            self.kill()
+        if not self.immortal:
+            self.hp -= damage
+            if self.hp <= 0:
+                self.kill()
 
 
 class Npc(Person):
@@ -526,6 +528,16 @@ class Hero(Person):
         if self.hp > 0:
             new_bullet = None
             if event.type == pygame.KEYDOWN:
+                if pygame.key.get_pressed()[pygame.K_1] and \
+                    pygame.key.get_pressed()[pygame.K_2] and \
+                     pygame.key.get_pressed()[pygame.K_4]:
+                    if not self.immortal:
+                        self.immortal = True
+                        print("immortal activated")
+                    else:
+                        self.immortal = False
+                        print("immortal disactivated")
+
                 if event.key == pygame.K_e:
                     x = check_npc(self.rect.x, self.rect.y, npc_sprites)
                     if x:
@@ -663,7 +675,7 @@ class GoodEnemy(Person):
 class BaseEnemy(Person):
     def __init__(self, x, y, *group):
         super().__init__(x, y, "Enemys/Enemy_base.png", *group)
-        self.bullet_spawn = 1000
+        self.bullet_spawn = 10
         self.t = 0
         self.life = True
         self.running_right = []
@@ -836,3 +848,106 @@ class Saw(pygame.sprite.Sprite):
                     return x
         else:
             self.wasDamage = True
+
+
+class Boss(Person):
+    def __init__(self, *group):
+        self.oldx = 400
+        self.oldy = 50
+        super().__init__(self.oldx, self.oldy, "Boss/Boss_0.png", *group)
+        self.hp = 1000
+        self.LeftUpbullet_spawn = 50
+        self.LeftDownbullet_spawn = 50
+        self.RightUpbullet_spawn = 50
+        self.RightDownbullet_spawn = 50
+        self.DownLeftbullet_spawn = 50
+        self.DownCentbullet_spawn = 50
+        self.DownRightbullet_spawn = 50
+        self.move = "y+"
+        self.t = 0
+        self.life = True
+        self.animations = []
+        for i in range(6):
+            self.animations.append(load_image("Boss/boss_" + str(i) + ".png", -1))
+
+    def animate(self):
+        if self.life:
+            self.image = self.animations[self.t]
+            self.t += 1
+            if self.t > 5:
+                self.t = 0
+
+    def get_hit(self, damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            self.life = False
+            self.kill()
+
+    def moving(self, floor_sprites, hero_sprites):
+        if self.life:
+            if check_hero(self.rect.x - 10, self.rect.y + 40, False, hero_sprites):
+                if self.LeftUpbullet_spawn > 50:
+                    self.LeftUpbullet_spawn = 0
+                    return Bullet(self.rect.x - 20, self.rect.y + 30, False, 2, "bull_0.png")
+                else:
+                    self.LeftUpbullet_spawn += 1
+            elif check_hero(self.rect.x - 10, self.rect.y + 110, False, hero_sprites):
+                if self.LeftDownbullet_spawn > 50:
+                    self.LeftDownbullet_spawn = 0
+                    return Bullet(self.rect.x - 20, self.rect.y + 100, False, 2, "bull_0.png")
+                else:
+                    self.LeftDownbullet_spawn += 1
+            elif check_hero(self.rect.x + 310, self.rect.y + 40, True, hero_sprites):
+                if self.RightUpbullet_spawn > 50:
+                    self.RightUpbullet_spawn = 0
+                    return Bullet(self.rect.x + 310, self.rect.y + 35, True, 2, "bull_0.png")
+                else:
+                    self.RightUpbullet_spawn += 1
+            elif check_hero(self.rect.x + 290, self.rect.y + 80, True, hero_sprites):
+                if self.RightDownbullet_spawn > 50:
+                    self.RightDownbullet_spawn = 0
+                    return Bullet(self.rect.x + 310, self.rect.y + 85, True, 2, "bull_0.png")
+                else:
+                    self.RightDownbullet_spawn += 1
+            elif check_hero_down(self.rect.x + 45, self.rect.y + 200, hero_sprites):
+                if self.DownLeftbullet_spawn > 50:
+                    self.DownLeftbullet_spawn = 0
+                    return DownBullet(self.rect.x + 25, self.rect.y + 205, 5)
+                else:
+                    self.DownLeftbullet_spawn += 1
+            elif check_hero_down(self.rect.x + 150, self.rect.y + 180, hero_sprites):
+                if self.DownCentbullet_spawn > 50:
+                    self.DownCentbullet_spawn = 0
+                    return DownBullet(self.rect.x + 130, self.rect.y + 205, 5)
+                else:
+                    self.DownCentbullet_spawn += 1
+            elif check_hero_down(self.rect.x + 250, self.rect.y + 150, hero_sprites):
+                if self.DownRightbullet_spawn > 50:
+                    self.DownRightbullet_spawn = 0
+                    return DownBullet(self.rect.x + 230, self.rect.y + 205, 5)
+                else:
+                    self.DownRightbullet_spawn += 1
+            else:
+                self.LeftUpbullet_spawn = 50
+                self.LeftDownbullet_spawn = 50
+                self.RightUpbullet_spawn = 50
+                self.RightDownbullet_spawn = 50
+                self.DownLeftbullet_spawn = 50
+                self.DownCentbullet_spawn = 50
+                self.DownRightbullet_spawn = 50
+            if self.move == "y+":
+                self.rect.y += 1
+                if self.rect.y >= self.oldy + 200:
+                    self.move = "x+"
+            elif self.move == "x+":
+                self.rect.x += 1
+                if self.rect.x >= self.oldx + 100:
+                    self.move = "y-"
+            elif self.move == "y-":
+                self.rect.y -= 1
+                if self.rect.y <= self.oldy:
+                    self.move = "x-"
+            elif self.move == "x-":
+                self.rect.x -= 1
+                if self.rect.x <= self.oldx:
+                    self.move = "y+"

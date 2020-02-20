@@ -5,7 +5,7 @@ import random
 from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window, Death_image, NewGun
 from classes import Floor, Endlevel, Box, Glass
 from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet, DubBullet
-from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw
+from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw, Boss
 from functions import load_image, saving_location, check_continue, check_plot
 from dialogues import dialog_with_AGT, dialog_with_ILD, dialog_with_PLN, dialog_with_RSL
 
@@ -181,6 +181,8 @@ class Level:
                     self.all_sprites.add(GoodEnemy(50 * j, 50 * i - 40, self.enemy_sprites))
                 elif level[i][j] == "_":
                     self.all_sprites.add(Saw(50 * j, 50 * i + 10, self.enemy_sprites))
+                elif level[i][j] == "B":
+                    self.all_sprites.add(Boss(self.enemy_sprites))
 
     def render(self, screen):
         screen.fill((0, 0, 0))
