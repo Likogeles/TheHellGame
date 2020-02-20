@@ -1,7 +1,7 @@
 import pygame
 import math
 
-from functions import load_image, self_on_screen, check_block, check_npc, check_hero, check_hero_down, check_saves_guns
+from functions import load_image, self_on_screen, check_block, check_npc, check_hero, check_hero_down, check_saves_guns, saving_plot
 
 
 class HealthPoint(pygame.sprite.Sprite):
@@ -852,6 +852,7 @@ class Saw(pygame.sprite.Sprite):
 
 class Boss(Person):
     def __init__(self, *group):
+        self.circspos = [(100, 50), (180, 175), (250, 100), (140, 25), (50, 170)]
         self.oldx = 400
         self.oldy = 50
         super().__init__(self.oldx, self.oldy, "Boss/Boss_0.png", *group)
@@ -865,10 +866,46 @@ class Boss(Person):
         self.DownRightbullet_spawn = 50
         self.move = "y+"
         self.t = 0
+        self.r = 10
         self.life = True
         self.animations = []
         for i in range(6):
             self.animations.append(load_image("Boss/boss_" + str(i) + ".png", -1))
+        self.boss_sound = pygame.mixer.Sound("data/Sounds/boss.ogg")
+        self.boss_sound.set_volume(0.5)
+        self.mustexp = True
+
+    def explosion(self, screen):
+        if self.mustexp:
+            self.t += 1
+            if self.t % 50 == 0:
+                self.boss_sound.play()
+        if 10 < self.t <= 50:
+            self.r += 1
+            pygame.draw.circle(screen, (250, 250, 0), (self.rect.x + self.circspos[0][0], self.rect.y + self.circspos[0][1]), self.r)
+            pygame.draw.circle(screen, (255, 255, 255), (self.rect.x + self.circspos[0][0], self.rect.y + self.circspos[0][1]), self.r - 10)
+        elif 50 < self.t <= 100:
+            self.r += 1
+            pygame.draw.circle(screen, (250, 250, 0), (self.rect.x + self.circspos[1][0], self.rect.y + self.circspos[1][1]), self.r)
+            pygame.draw.circle(screen, (255, 255, 255), (self.rect.x + self.circspos[1][0], self.rect.y + self.circspos[1][1]), self.r - 10)
+        elif 100 < self.t <= 150:
+            self.r += 1
+            pygame.draw.circle(screen, (250, 250, 0), (self.rect.x + self.circspos[2][0], self.rect.y + self.circspos[2][1]), self.r)
+            pygame.draw.circle(screen, (255, 255, 255), (self.rect.x + self.circspos[2][0], self.rect.y + self.circspos[2][1]), self.r - 10)
+        elif 150 < self.t <= 200:
+            self.r += 1
+            pygame.draw.circle(screen, (250, 250, 0), (self.rect.x + self.circspos[3][0], self.rect.y + self.circspos[3][1]), self.r)
+            pygame.draw.circle(screen, (255, 255, 255), (self.rect.x + self.circspos[3][0], self.rect.y + self.circspos[3][1]), self.r - 10)
+        elif 200 < self.t <= 250:
+            self.r += 1
+            pygame.draw.circle(screen, (250, 250, 0), (self.rect.x + self.circspos[4][0], self.rect.y + self.circspos[4][1]), self.r)
+            pygame.draw.circle(screen, (255, 255, 255), (self.rect.x + self.circspos[4][0], self.rect.y + self.circspos[4][1]), self.r - 10)
+        elif self.t > 250:
+            self.mustexp = False
+            saving_plot(7)
+            self.kill()
+        if self.r >= 50:
+            self.r = 10
 
     def animate(self):
         if self.life:
@@ -880,8 +917,9 @@ class Boss(Person):
     def get_hit(self, damage):
         self.hp -= damage
         if self.hp <= 0:
+            if self.life:
+                self.t = 0
             self.life = False
-            self.kill()
 
     def moving(self, floor_sprites, hero_sprites):
         if self.life:

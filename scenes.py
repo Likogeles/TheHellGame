@@ -155,6 +155,8 @@ class Level:
         self.death_sound = pygame.mixer.Sound("data/Sounds/death.ogg")
         self.death_sound.set_volume(0.5)
 
+        self.boss = None
+
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:
             level_map = [line.strip() for line in mapFile]
@@ -182,7 +184,9 @@ class Level:
                 elif level[i][j] == "_":
                     self.all_sprites.add(Saw(50 * j, 50 * i + 10, self.enemy_sprites))
                 elif level[i][j] == "B":
-                    self.all_sprites.add(Boss(self.enemy_sprites))
+                    if check_plot() == 6:
+                        self.boss = Boss(self.enemy_sprites)
+                        self.all_sprites.add(self.boss)
 
     def render(self, screen):
         screen.fill((0, 0, 0))
@@ -240,6 +244,10 @@ class Level:
                 self.bullet_3_slider.draw(screen)
         else:
             pygame.mouse.set_visible(False)
+            if self.boss:
+                if not self.boss.life:
+                    pygame.mixer.music.stop()
+                    self.boss.explosion(screen)
 
     def death(self, screen):
         self.death_sprites.add(Death_image(self.hero.rect.x - 45, self.hero.rect.y, "Hero/death_0.png"))
@@ -522,8 +530,11 @@ class Level5(Level):
     def __init__(self, level_text):
         super().__init__(level_text)
         saving_location(5)
-        pygame.mixer.music.load("data/Music/level5.mp3")
-        pygame.mixer.music.play(-1)
+        if check_plot() == 6:
+            pygame.mixer.music.load("data/Music/level5.mp3")
+            pygame.mixer.music.play(-1)
+        else:
+            pygame.mixer.music.stop()
 
         filename = "data/LevelsLists/" + level_text
         with open(filename, 'r') as mapFile:

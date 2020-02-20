@@ -91,6 +91,28 @@ def dialog_with_AGT(self, screen, x):
         screen.blit(self.dialog_font.render("Просто уничтожь его и возвращайся туда, откуда пришёл.", 1, (0, 0, 0)), (110, 480))
         pygame.display.flip()
         click_wait()
+        self.dialog_sprites.draw(screen)
+        screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
+        screen.blit(self.dialog_font.render("Кстати, существо глухое, а значит читерная", 1, (0, 0, 0)), (110, 430))
+        screen.blit(self.dialog_font.render("несбалансированная музыкальная пушка против него", 1, (0, 0, 0)), (110, 455))
+        screen.blit(self.dialog_font.render("бесполезна. Получается она тебе почти не нужна.", 1, (0, 0, 0)), (110, 480))
+        pygame.display.flip()
+        click_wait()
+    elif check_plot() == 7:
+        self.dialog_sprites.draw(screen)
+        screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
+        screen.blit(self.dialog_font.render("Так, ты уничтожил море дорогой техники,", 1, (0, 0, 0)), (110, 430))
+        screen.blit(self.dialog_font.render("разрушил огромную часть наших ресурсов,", 1, (0, 0, 0)), (110, 455))
+        screen.blit(self.dialog_font.render("уничтожил единственное во вселенной неуничтожаемое стекло и убил", 1, (0, 0, 0)), (110, 480))
+        screen.blit(self.dialog_font.render("существо, которое никак не могло тебе помешать.", 1, (0, 0, 0)), (110, 505))
+        pygame.display.flip()
+        click_wait()
+        self.dialog_sprites.draw(screen)
+        screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
+        screen.blit(self.dialog_font.render("Теперь ты - герой, празднуй свою победу и", 1, (0, 0, 0)), (110, 430))
+        screen.blit(self.dialog_font.render("убирайся из этого места.", 1, (0, 0, 0)), (110, 455))
+        pygame.display.flip()
+        click_wait()
     pygame.mouse.set_visible(False)
 
 
@@ -154,6 +176,12 @@ def dialog_with_ILD(self, screen, x):
         screen.blit(self.dialog_font.render("Музыкальная пушка? Звучит как плагиат.", 1, (0, 0, 0)), (110, 430))
         pygame.display.flip()
         click_wait()
+    elif check_plot() == 7:
+        self.dialog_sprites.draw(screen)
+        screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
+        screen.blit(self.dialog_font.render("Это существо выглядело просто ужасно.", 1, (0, 0, 0)), (110, 430))
+        pygame.display.flip()
+        click_wait()
     pygame.mouse.set_visible(False)
 
 
@@ -200,6 +228,12 @@ def dialog_with_PLN(self, screen, x):
         screen.blit(self.dialog_font.render("Отомсти за тех, кто сошёл с тобой с одного конвейера!", 1, (0, 0, 0)), (110, 430))
         pygame.display.flip()
         click_wait()
+    elif check_plot() == 7:
+        self.dialog_sprites.draw(screen)
+        screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
+        screen.blit(self.dialog_font.render("Ты отомстил за наших собратьев. Спасибо.", 1, (0, 0, 0)), (110, 430))
+        pygame.display.flip()
+        click_wait()
     pygame.mouse.set_visible(False)
 
 
@@ -236,6 +270,14 @@ def dialog_with_RSL(self, screen, x):
         self.dialog_sprites.draw(screen)
         screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
         screen.blit(self.dialog_font.render("Ну всё, тебе осталось только выйти на битву с боссом.", 1, (0, 0, 0)), (110, 430))
+        pygame.display.flip()
+        click_wait()
+    elif check_plot() == 7:
+        self.dialog_sprites.draw(screen)
+        screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
+        screen.blit(self.dialog_font.render("Оно смогло поглотить нашу технику и даже воспарить", 1, (0, 0, 0)), (110, 430))
+        screen.blit(self.dialog_font.render("над землёй, за счёт неё. Возможно её следовало", 1, (0, 0, 0)), (110, 455))
+        screen.blit(self.dialog_font.render("оставить в живых и изучить...", 1, (0, 0, 0)), (110, 480))
         pygame.display.flip()
         click_wait()
     pygame.mouse.set_visible(False)

@@ -105,7 +105,6 @@ while True:
         Scene = Level5("Level_5.txt")
         scenename = "level5"
         pygame.mixer.music.set_volume(0.4)
-    # Сюда нужно подставлять остальные сцены по мере их готовности
 
     Scene.render(screen)
 
