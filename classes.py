@@ -131,6 +131,15 @@ class Dialog_window(pygame.sprite.Sprite):
         self.rect.y = 270
 
 
+class NewGun(pygame.sprite.Sprite):
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = load_image("newgun.png", -1)
+        self.rect = self.image.get_rect()
+        self.rect.x = 186
+        self.rect.y = 76
+
+
 class Death_image(pygame.sprite.Sprite):
     def __init__(self, x, y, image, *group):
         super().__init__(*group)

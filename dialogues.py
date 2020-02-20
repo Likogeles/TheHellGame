@@ -109,6 +109,8 @@ def dialog_with_ILD(self, screen, x):
         return "level_1"
     elif check_plot() == 1:
         self.dialog_sprites.draw(screen)
+        self.newgun_sprites.draw(screen)
+        screen.blit(self.dialog_gunfont.render("СИНУС-ПУШКА", 1, (255, 255, 255)), (325, 150))
         screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
         screen.blit(self.dialog_font.render("Спасибо, что спас меня. Знаешь, пока я был", 1, (0, 0, 0)),
                     (110, 430))
@@ -169,6 +171,8 @@ def dialog_with_PLN(self, screen, x):
         return "level_1"
     elif check_plot() == 3:
         self.dialog_sprites.draw(screen)
+        self.newgun_sprites.draw(screen)
+        screen.blit(self.dialog_gunfont.render("ГОЛОВОКРАБ", 1, (255, 255, 255)), (350, 150))
         screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
         screen.blit(self.dialog_font.render("Ещё раз спасибо за спасение.", 1, (0, 0, 0)), (110, 430))
         screen.blit(self.dialog_font.render("Пока я был в Мед. офисе я осмотрел заражённых.", 1, (0, 0, 0)), (110, 455))
@@ -211,6 +215,8 @@ def dialog_with_RSL(self, screen, x):
         return "level_1"
     elif check_plot() == 5:
         self.dialog_sprites.draw(screen)
+        self.newgun_sprites.draw(screen)
+        screen.blit(self.dialog_gunfont.render("Музыкальная пушка", 1, (255, 255, 255)), (325, 150))
         screen.blit(self.dialog_namefont.render(x[12:], 1, (0, 0, 0)), (115, 370))
         screen.blit(self.dialog_font.render("Спасибо за спасение, РН-42.", 1, (0, 0, 0)), (110, 430))
         screen.blit(self.dialog_font.render("Знаешь, в плену мне было чем заняться.", 1, (0, 0, 0)), (110, 455))

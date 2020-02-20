@@ -2,10 +2,10 @@ import pygame
 import time
 import random
 
-from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window
+from classes import HealthPoint, BulletSliderSprite, Button, HeroBut, Dialog_window, Death_image, NewGun
 from classes import Floor, Endlevel, Box, Glass
 from classes import Bullet, SinusBullet, DownHeroBullet, DownBullet, DubBullet
-from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw, Death_image
+from classes import Hero, Npc, GoodEnemy, BaseEnemy, UpEnemy, Saw
 from functions import load_image, saving_location, check_continue, check_plot
 from dialogues import dialog_with_AGT, dialog_with_ILD, dialog_with_PLN, dialog_with_RSL
 
@@ -115,9 +115,11 @@ class Level:
 
         self.font = pygame.font.Font(None, 30)
         self.dialog_namefont = pygame.font.Font(None, 65)
+        self.dialog_gunfont = pygame.font.Font(None, 50)
         self.dialog_font = pygame.font.Font(None, 30)
         self.dialog_sprites = pygame.sprite.Group()
         self.dialog_sprites.add(Dialog_window())
+        self.newgun_sprites = pygame.sprite.Group(NewGun())
         self.death_sprites = pygame.sprite.Group()
 
         if self.level_text == "level_1":
